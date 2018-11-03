@@ -24,6 +24,7 @@
                 android:text="Enter ZIP Code:"/>
 
             <EditText
+                android:id="@+id/main_zipcode"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
@@ -44,6 +45,7 @@
                 android:text="Distance:"/>
 
             <EditText
+                android:id="@+id/main_distance"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
                 android:padding="10dp"/>
@@ -56,21 +58,28 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/main_search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:text="Search"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="20dp"
             android:text="Near by ZIP codes:"/>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="300dp">
 
-            <android.support.v7.app.AlertController.RecycleListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/main_list"
+                android:scrollbars="vertical"
+                android:padding="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.app.AlertController.RecycleListView>
-        </ScrollView>
+                android:layout_height="300dp">
+
+            </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
