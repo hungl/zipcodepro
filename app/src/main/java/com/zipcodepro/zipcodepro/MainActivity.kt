@@ -1,12 +1,16 @@
 package com.zipcodepro.zipcodepro
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -14,6 +18,7 @@ import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,8 +45,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         val zipCode = findViewById<EditText>(R.id.main_zipcode_et)
-        val distance = findViewById<EditText?>(R.id.main_distance_et)
         val searchButton = findViewById<Button?>(R.id.main_search_btn)
+
+        val distance = findViewById<EditText?>(R.id.main_distance_et)?.apply {
+            setOnEditorActionListener { _, actionId, _ ->
+                return@setOnEditorActionListener when (actionId) {
+                    EditorInfo.IME_ACTION_SEARCH -> {
+                        searchButton?.performClick()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
         errorTextView = findViewById(R.id.main_error_tv)
         zipCodeListLabelTextView = findViewById(R.id.main_zipcode_list_label_tv)
         val viewManager = LinearLayoutManager(this)
@@ -55,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         searchButton?.setOnClickListener {
+            dismissKeyboard(currentFocus)
             ZIPCodeApiService.create().searchZIPCodeByRadius(apiKey, format, zipCode?.text.toString(), distance?.text.toString())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -103,6 +120,11 @@ class MainActivity : AppCompatActivity() {
         zipCodeListLabelTextView?.visibility = VISIBLE
         zipCodeListRecyclerView?.visibility = VISIBLE
         errorTextView?.visibility = GONE
+    }
+
+    private fun dismissKeyboard(currentView: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentView.windowToken, 0)
     }
 
     companion object {
