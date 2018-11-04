@@ -9,10 +9,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-
-
-
-
 /**
  * Created by hunglac on 11/2/18.
  */
