@@ -5,15 +5,21 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 
 class MainActivity : AppCompatActivity() {
+
+    private var zipCodeMainLL: LinearLayout? = null
+    private var zipCodeNetworkErrorLL: LinearLayout? = null
+    private var reloadBtn: Button? = null
 
     private var errorTextView: TextView? = null
     private var zipCodeListLabelTextView: TextView? = null
@@ -24,6 +30,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        zipCodeMainLL = findViewById(R.id.main_zipcode_linearlayout)
+        zipCodeNetworkErrorLL = findViewById(R.id.main_zipcode_network_error_linearlayout)
+
+        reloadBtn = findViewById(R.id.main_zipcode_reload_button)
+        reloadBtn?.setOnClickListener {
+            checkNetworkConnection()
+        }
 
         val zipCode = findViewById<EditText>(R.id.main_zipcode_et)
         val distance = findViewById<EditText?>(R.id.main_distance_et)
@@ -59,19 +73,36 @@ class MainActivity : AppCompatActivity() {
                             }
                     )
         }
+
+        checkNetworkConnection()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkNetworkConnection()
+    }
+
+    private fun checkNetworkConnection() {
+        if (NetworkUtils.isConnected(this)) {
+            zipCodeMainLL?.visibility = VISIBLE
+            zipCodeNetworkErrorLL?.visibility = GONE
+        } else {
+            zipCodeMainLL?.visibility = GONE
+            zipCodeNetworkErrorLL?.visibility = VISIBLE
+        }
     }
 
     private fun showError(errorCode: Int?) {
         errorTextView?.text = if (404 == errorCode) "The ZIP code you provided was not found." else "Something went wrong. Please try again later."
-        errorTextView?.visibility = View.VISIBLE
-        zipCodeListLabelTextView?.visibility = View.GONE
-        zipCodeListRecyclerView?.visibility = View.GONE
+        errorTextView?.visibility = VISIBLE
+        zipCodeListLabelTextView?.visibility = GONE
+        zipCodeListRecyclerView?.visibility = GONE
     }
 
     private fun hideError() {
-        zipCodeListLabelTextView?.visibility = View.VISIBLE
-        zipCodeListRecyclerView?.visibility = View.VISIBLE
-        errorTextView?.visibility = View.GONE
+        zipCodeListLabelTextView?.visibility = VISIBLE
+        zipCodeListRecyclerView?.visibility = VISIBLE
+        errorTextView?.visibility = GONE
     }
 
     companion object {
