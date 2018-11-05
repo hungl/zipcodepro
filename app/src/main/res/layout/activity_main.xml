@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     tools:context="com.zipcodepro.zipcodepro.MainActivity">
 
+    <ProgressBar
+        android:id="@+id/main_progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/main_network_error_linearlayout"
         android:layout_width="match_parent"

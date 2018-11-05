@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -23,6 +24,8 @@ import retrofit2.HttpException
 
 
 class MainActivity : AppCompatActivity() {
+
+    private var progressBar: ProgressBar? = null
 
     private var zipCodeMainLL: LinearLayout? = null
     private var zipCodeNetworkErrorLL: LinearLayout? = null
@@ -40,6 +43,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        progressBar = findViewById(R.id.main_progressBar)
 
         zipCodeMainLL = findViewById(R.id.main_linearlayout)
         zipCodeNetworkErrorLL = findViewById(R.id.main_network_error_linearlayout)
@@ -124,11 +129,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun findZIPCodeInTheRadius() {
+        progressBar?.visibility = View.VISIBLE
         ZIPCodeApiService.create().searchZIPCodeByRadius(apiKey, format, zipCodeEt?.text.toString(), distanceEt?.text.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { result ->
+                            progressBar?.visibility = View.GONE
                             hideError()
                             val data = result.zipCodes.apply {
                                 remove(zipCodeEt?.text?.toString())
@@ -137,6 +144,7 @@ class MainActivity : AppCompatActivity() {
                             Log.d(TAG, "ZIPCode API request successful! ZIP Codes : ${result.zipCodes}")
                         },
                         { error ->
+                            progressBar?.visibility = View.GONE
                             showError((error as? HttpException)?.code())
                             Log.d(TAG, "ZIPCode API request error: ${error.message}")
                         },
