@@ -1,5 +1,6 @@
 package com.zipcodepro.zipcodepro
 
+import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -34,6 +35,11 @@ class ZIPCodeAdapter :
         override fun onBindViewHolder(holder: ZIPCodeViewHolder, position: Int) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
+            if(position % 2 != 0){
+                holder.textView.setBackgroundColor(Color.LTGRAY)
+            } else {
+                holder.textView.setBackgroundColor(Color.TRANSPARENT)
+            }
             holder.textView.text = data[position]
         }
 

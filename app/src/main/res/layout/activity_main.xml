@@ -69,13 +69,12 @@
 
                 <EditText
                     android:id="@+id/main_zipcode_et"
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:inputType="number"
                     android:maxLength="5"
-                    android:imeOptions="actionNext"
-                    android:hint="ZIP Code"/>
+                    android:imeOptions="actionNext" />
 
             </LinearLayout>
 
@@ -93,7 +92,7 @@
 
                 <EditText
                     android:id="@+id/main_distance_et"
-                    android:layout_width="100dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:maxLength="5"
@@ -129,16 +128,22 @@
                 android:id="@+id/main_list_label_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:text="ZIP codes in the radius:"
                 android:visibility="gone"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/main_recyclerview"
                 android:scrollbars="vertical"
-                android:padding="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:padding="1dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@drawable/border_background"
                 android:visibility="gone">
 
             </android.support.v7.widget.RecyclerView>
