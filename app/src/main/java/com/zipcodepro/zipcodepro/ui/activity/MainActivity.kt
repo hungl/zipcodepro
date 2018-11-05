@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -19,8 +20,8 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.zipcodepro.zipcodepro.R
-import com.zipcodepro.zipcodepro.ui.view.ZIPCodeAdapter
 import com.zipcodepro.zipcodepro.data.ZIPCodeApiService
+import com.zipcodepro.zipcodepro.ui.view.ZIPCodeAdapter
 import com.zipcodepro.zipcodepro.utils.Constants
 import com.zipcodepro.zipcodepro.utils.NetworkUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -149,7 +150,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAPIError(errorCode: Int?) {
-        progressBar?.visibility = View.GONE
+        hideProgressBar()
         errorTv?.text = if (404 == errorCode) getString(R.string.error_api_zipcode_not_found) else getString(R.string.error_generic)
         errorTv?.visibility = VISIBLE
         zipCodeListLabelTv?.visibility = GONE
@@ -157,7 +158,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showUserError(errorMessage: String) {
-        progressBar?.visibility = View.GONE
+        hideProgressBar()
         errorTv?.text = errorMessage
         errorTv?.visibility = VISIBLE
         zipCodeListLabelTv?.visibility = GONE
@@ -165,10 +166,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hideError() {
-        progressBar?.visibility = View.GONE
+        hideProgressBar()
         zipCodeListLabelTv?.visibility = VISIBLE
         zipCodeListRecyclerView?.visibility = VISIBLE
         errorTv?.visibility = GONE
+    }
+
+    private fun showProgressBar() {
+        progressBar?.visibility = View.VISIBLE
+        progressBar?.bringToFront()
+        window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    private fun hideProgressBar() {
+        progressBar?.visibility = View.GONE
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     private fun dismissKeyboard(currentView: View) {
@@ -188,7 +201,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        progressBar?.visibility = View.VISIBLE
+        showProgressBar()
 
         ZIPCodeApiService.create().searchZIPCodeByRadius(resources.getString(R.string.zipcodeAPIKey), format, zipCodeEt?.text.toString(), distanceEt?.text.toString(), distanceUnit, responseMinimal)
                 .subscribeOn(Schedulers.io())
