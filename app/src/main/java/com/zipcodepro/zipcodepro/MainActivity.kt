@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.View.GONE
@@ -26,8 +28,11 @@ class MainActivity : AppCompatActivity() {
     private var zipCodeNetworkErrorLL: LinearLayout? = null
     private var reloadBtn: Button? = null
 
-    private var errorTextView: TextView? = null
-    private var zipCodeListLabelTextView: TextView? = null
+    private var zipCodeEt: EditText? = null
+    private var distanceEt: EditText? = null
+    private var viewAdapter = ZIPCodeAdapter()
+    private var errorTv: TextView? = null
+    private var zipCodeListLabelTv: TextView? = null
     private var zipCodeListRecyclerView: RecyclerView? = null
     private val apiKey = "gXTMe761UEknkYBpIgAKOX00rBZVwMLWF4YtS1sCoLjOlv85TmL1YBLKzSRqtuYj"
     private val format = "radius.json"
@@ -36,18 +41,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        zipCodeMainLL = findViewById(R.id.main_zipcode_linearlayout)
-        zipCodeNetworkErrorLL = findViewById(R.id.main_zipcode_network_error_linearlayout)
+        zipCodeMainLL = findViewById(R.id.main_linearlayout)
+        zipCodeNetworkErrorLL = findViewById(R.id.main_network_error_linearlayout)
 
-        reloadBtn = findViewById(R.id.main_zipcode_reload_button)
+        reloadBtn = findViewById(R.id.main_reload_button)
         reloadBtn?.setOnClickListener {
             checkNetworkConnection()
         }
 
-        val zipCode = findViewById<EditText>(R.id.main_zipcode_et)
+        zipCodeEt = findViewById(R.id.main_zipcode_et)
         val searchButton = findViewById<Button?>(R.id.main_search_btn)
 
-        val distance = findViewById<EditText?>(R.id.main_distance_et)?.apply {
+        distanceEt = findViewById<EditText?>(R.id.main_distance_et)?.apply {
             setOnEditorActionListener { _, actionId, _ ->
                 return@setOnEditorActionListener when (actionId) {
                     EditorInfo.IME_ACTION_SEARCH -> {
@@ -58,38 +63,29 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        errorTextView = findViewById(R.id.main_error_tv)
-        zipCodeListLabelTextView = findViewById(R.id.main_zipcode_list_label_tv)
+        errorTv = findViewById(R.id.main_error_tv)
+        zipCodeListLabelTv = findViewById(R.id.main_list_label_tv)
         val viewManager = LinearLayoutManager(this)
-        val viewAdapter = ZIPCodeAdapter()
 
-        zipCodeListRecyclerView = findViewById<RecyclerView?>(R.id.main_zipcode_list_recyclerview)?.apply {
+        zipCodeListRecyclerView = findViewById<RecyclerView?>(R.id.main_recyclerview)?.apply {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
 
         }
 
-        searchButton?.setOnClickListener {
-            dismissKeyboard(currentFocus)
-            ZIPCodeApiService.create().searchZIPCodeByRadius(apiKey, format, zipCode?.text.toString(), distance?.text.toString())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            { result ->
-                                hideError()
-                                viewAdapter.setData(result.zipCodes)
-                                Log.d(TAG, "ZIPCode API request successful! ZIP Codes : ${result.zipCodes}")
-                            },
-                            { error ->
-                                showError((error as? HttpException)?.code())
-                                Log.d(TAG, "ZIPCode API request error: ${error.message}")
-                            },
-                            {
-                                Log.d(TAG, "ZIPCode API request completed")
-                            }
-                    )
+        searchButton?.apply {
+            isEnabled = !(zipCodeEt?.text.isNullOrEmpty() || distanceEt?.text.isNullOrEmpty())
+            setOnClickListener {
+                if (isEnabled) {
+                    dismissKeyboard(currentFocus)
+                    findZIPCodeInTheRadius()
+                }
+            }
         }
+
+        zipCodeEt?.addTextChangedListener(ZIPCodeProTextWatcher(zipCodeEt, distanceEt, searchButton))
+        distanceEt?.addTextChangedListener(ZIPCodeProTextWatcher(zipCodeEt, distanceEt, searchButton))
 
         checkNetworkConnection()
     }
@@ -110,16 +106,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showError(errorCode: Int?) {
-        errorTextView?.text = if (404 == errorCode) "The ZIP code you provided was not found." else "Something went wrong. Please try again later."
-        errorTextView?.visibility = VISIBLE
-        zipCodeListLabelTextView?.visibility = GONE
+        errorTv?.text = if (404 == errorCode) "The ZIP code you provided was not found." else "Something went wrong. Please try again later."
+        errorTv?.visibility = VISIBLE
+        zipCodeListLabelTv?.visibility = GONE
         zipCodeListRecyclerView?.visibility = GONE
     }
 
     private fun hideError() {
-        zipCodeListLabelTextView?.visibility = VISIBLE
+        zipCodeListLabelTv?.visibility = VISIBLE
         zipCodeListRecyclerView?.visibility = VISIBLE
-        errorTextView?.visibility = GONE
+        errorTv?.visibility = GONE
     }
 
     private fun dismissKeyboard(currentView: View) {
@@ -127,8 +123,45 @@ class MainActivity : AppCompatActivity() {
         imm.hideSoftInputFromWindow(currentView.windowToken, 0)
     }
 
+    private fun findZIPCodeInTheRadius() {
+        ZIPCodeApiService.create()
+                .searchZIPCodeByRadius(apiKey, format, zipCodeEt?.text.toString(), distanceEt?.text.toString())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        { result ->
+                            hideError()
+                            viewAdapter.setData(result.zipCodes)
+                            Log.d(TAG, "ZIPCode API request successful! ZIP Codes : ${result.zipCodes}")
+                        },
+                        { error ->
+                            showError((error as? HttpException)?.code())
+                            Log.d(TAG, "ZIPCode API request error: ${error.message}")
+                        },
+                        {
+                            Log.d(TAG, "ZIPCode API request completed")
+                        }
+                )
+    }
+
+    private class ZIPCodeProTextWatcher(var zipcode: EditText?, var distance: EditText?, var searchButton: Button?): TextWatcher {
+
+        override fun afterTextChanged(s: Editable?) {
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            checkEmptyFields()
+        }
+
+        private fun checkEmptyFields(){
+            searchButton?.isEnabled = !(zipcode?.text.isNullOrEmpty() || distance?.text.isNullOrEmpty())
+        }
+    }
+
     companion object {
         const val TAG = "ZIPCodeProMainActivity"
-
     }
 }

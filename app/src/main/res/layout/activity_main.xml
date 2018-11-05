@@ -6,7 +6,7 @@
     tools:context="com.zipcodepro.zipcodepro.MainActivity">
 
     <LinearLayout
-        android:id="@+id/main_zipcode_network_error_linearlayout"
+        android:id="@+id/main_network_error_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -25,7 +25,7 @@
                 android:text="No Network Connection."/>
 
             <Button
-                android:id="@+id/main_zipcode_reload_button"
+                android:id="@+id/main_reload_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tap to Reload"/>
@@ -35,7 +35,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/main_zipcode_linearlayout"
+        android:id="@+id/main_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -118,7 +118,7 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/main_zipcode_list_label_tv"
+                android:id="@+id/main_list_label_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="20dp"
@@ -126,7 +126,7 @@
                 android:visibility="gone"/>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/main_zipcode_list_recyclerview"
+                android:id="@+id/main_recyclerview"
                 android:scrollbars="vertical"
                 android:padding="20dp"
                 android:layout_width="match_parent"
