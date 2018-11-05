@@ -18,15 +18,15 @@ import retrofit2.http.QueryName
 interface ZIPCodeApiService {
     @GET("/rest/{apiKey}/{format}/{zipCode}/{distance}/{distanceUnit}")
     fun searchZIPCodeByRadius(
-            @Path("apiKey") apiKey: String,
-            @Path("format") format: String,
-            @Path("zipCode") zipCode: String,
-            @Path("distance") distance: String,
-            @Path("distanceUnit") distanceUnit: String,
+        @Path("apiKey") apiKey: String,
+        @Path("format") format: String,
+        @Path("zipCode") zipCode: String,
+        @Path("distance") distance: String,
+        @Path("distanceUnit") distanceUnit: String,
             // Whether to get full address or only ZIP code in the response
             // Empty string for full
             // "minimal" for ZIP code only
-            @QueryName() minimal: String
+        @QueryName() minimal: String
     ): Observable<ZIPCodeResponse>
 
     companion object {

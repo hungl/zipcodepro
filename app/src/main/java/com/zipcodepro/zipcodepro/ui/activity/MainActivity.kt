@@ -27,7 +27,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 
-
 class MainActivity : AppCompatActivity() {
 
     private var progressBar: ProgressBar? = null
@@ -101,7 +100,6 @@ class MainActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = viewManager
             adapter = viewAdapter
-
         }
 
         // Adding text watcher for field validation
@@ -216,7 +214,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Custom text watcher for ZIP code and distance input validation
-    private class ZIPCodeProTextWatcher(var zipcode: EditText?, var distance: EditText?, var searchButton: Button?): TextWatcher {
+    private class ZIPCodeProTextWatcher(var zipcode: EditText?, var distance: EditText?, var searchButton: Button?) : TextWatcher {
 
         override fun afterTextChanged(s: Editable?) {
         }
@@ -228,7 +226,7 @@ class MainActivity : AppCompatActivity() {
             validateFields()
         }
 
-        private fun validateFields(){
+        private fun validateFields() {
             searchButton?.isEnabled = !(zipcode?.text.isNullOrEmpty() || distance?.text.isNullOrEmpty())
         }
     }

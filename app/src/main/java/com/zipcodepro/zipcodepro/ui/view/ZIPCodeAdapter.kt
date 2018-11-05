@@ -18,15 +18,17 @@ class ZIPCodeAdapter :
 
     class ZIPCodeViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
 
-        override fun onCreateViewHolder(parent: ViewGroup,
-                                        viewType: Int): ZIPCodeViewHolder {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): ZIPCodeViewHolder {
             val textView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.zipcode_textview, parent, false) as TextView
             return ZIPCodeViewHolder(textView)
         }
 
         override fun onBindViewHolder(holder: ZIPCodeViewHolder, position: Int) {
-            if(position % 2 != 0){
+            if (position % 2 != 0) {
                 holder.textView.setBackgroundColor(Color.LTGRAY)
             } else {
                 holder.textView.setBackgroundColor(Color.TRANSPARENT)
