@@ -42,6 +42,9 @@ class MainActivity : AppCompatActivity() {
 
     private val format = Constants.RESPONSE_FORMAT_JSON
     private val distanceUnit = Constants.DISTANCE_UNIT_KM
+
+    // Query string to show only ZIP codes
+    // TODO: This has to go along with ZIP Code Response model
     private val responseMinimal = Constants.RESPONSE_MININAL
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,13 +113,15 @@ class MainActivity : AppCompatActivity() {
         checkNetworkConnection()
     }
 
-    private fun checkNetworkConnection() {
-        if (NetworkUtils.isConnected(this)) {
+    private fun checkNetworkConnection(): Boolean {
+        return if (NetworkUtils.isConnected(this)) {
             zipCodeMainLL?.visibility = VISIBLE
             zipCodeNetworkErrorLL?.visibility = GONE
+            true
         } else {
             zipCodeMainLL?.visibility = GONE
             zipCodeNetworkErrorLL?.visibility = VISIBLE
+            false
         }
     }
 
@@ -169,13 +174,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun findZIPCodeInTheRadius() {
-        progressBar?.visibility = View.VISIBLE
+        if (!checkNetworkConnection()) {
+            return
+        }
+
         if (!checkZIPCode()) {
             return
         }
         if (!checkDistance()) {
             return
         }
+
+        progressBar?.visibility = View.VISIBLE
+
         ZIPCodeApiService.create().searchZIPCodeByRadius(resources.getString(R.string.zipcodeAPIKey), format, zipCodeEt?.text.toString(), distanceEt?.text.toString(), distanceUnit, responseMinimal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
