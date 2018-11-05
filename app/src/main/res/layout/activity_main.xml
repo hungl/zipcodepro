@@ -30,13 +30,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Network Connection."/>
+                android:text="@string/error_network_message"/>
 
             <Button
                 android:id="@+id/main_reload_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tap to Reload"/>
+                android:text="@string/error_network_reload_btn"/>
 
         </LinearLayout>
 
@@ -65,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Enter ZIP Code:"/>
+                    android:text="@string/zipcode_input_label"/>
 
                 <EditText
                     android:id="@+id/main_zipcode_et"
@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Distance:"/>
+                    android:text="@string/distance_input_label"/>
 
                 <EditText
                     android:id="@+id/main_distance_et"
@@ -100,10 +100,10 @@
                     android:padding="10dp"/>
 
                 <TextView
+                    android:id="@+id/main_distance_unit_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="km"/>
+                    android:padding="5dp"/>
 
             </LinearLayout>
 
@@ -114,7 +114,7 @@
                 android:padding="20dp"
                 android:layout_marginEnd="40dp"
                 android:layout_gravity="right"
-                android:text="Search"/>
+                android:text="@string/search_btn_label"/>
 
             <TextView
                 android:id="@+id/main_error_tv"
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:text="ZIP codes in the radius:"
+                android:text="@string/zipcode_list_label"
                 android:visibility="gone"/>
 
             <android.support.v7.widget.RecyclerView

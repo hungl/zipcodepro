@@ -56,6 +56,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         zipCodeEt = findViewById(R.id.main_zipcode_et)
+
+        (findViewById<TextView?>(R.id.main_distance_unit_textview))?.text = distanceUnit
+
         val searchButton = findViewById<Button?>(R.id.main_search_btn)
 
         distanceEt = findViewById<EditText?>(R.id.main_distance_et)?.apply {
@@ -114,7 +117,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkZIPCode(): Boolean {
         val zipCodeLength = zipCodeEt?.text?.length ?: 0
         if (zipCodeLength < 5) {
-            showUserError("Invalid ZIP code.")
+            showUserError(getString(R.string.error_user_invalid_zipcode))
             return false
         }
         return true
@@ -123,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     private fun checkDistance(): Boolean {
         val distanceIntValue = distanceEt?.text?.toString()?.toInt() ?: 0
         if (distanceIntValue <= 0) {
-            showUserError("Invalid distance.")
+            showUserError(getString(R.string.error_user_invalid_distance))
             return false
         }
         return true
@@ -131,7 +134,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showAPIError(errorCode: Int?) {
         progressBar?.visibility = View.GONE
-        errorTv?.text = if (404 == errorCode) "The ZIP code you provided was not found." else "Something went wrong. Please try again later."
+        errorTv?.text = if (404 == errorCode) getString(R.string.error_api_zipcode_not_found) else getString(R.string.error_generic)
         errorTv?.visibility = VISIBLE
         zipCodeListLabelTv?.visibility = GONE
         zipCodeListRecyclerView?.visibility = GONE

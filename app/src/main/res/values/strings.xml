@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">ZipcodePro</string>
+
+    // UI
+    <string name="zipcode_input_label">Enter ZIP Code:</string>
+    <string name="distance_input_label">Distance:</string>
+    <string name="zipcode_list_label">ZIP codes in the radius:</string>
+    <string name="search_btn_label">Search</string>
+
+    // Error messages
+    <string name="error_network_message">No Network Connection.</string>
+    <string name="error_network_reload_btn">Tap to Reload</string>
+    <string name="error_generic">Something went wrong. Please try again later.</string>
+    <string name="error_api_zipcode_not_found">The ZIP code you provided was not found.</string>
+    <string name="error_user_invalid_zipcode">Invalid ZIP code.</string>
+    <string name="error_user_invalid_distance">Invalid distance.</string>
+
+
 </resources>
