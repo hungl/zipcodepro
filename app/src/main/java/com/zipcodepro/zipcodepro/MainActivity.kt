@@ -110,14 +110,42 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showError(errorCode: Int?) {
+    private fun checkZIPCode(): Boolean {
+        val zipCodeLength = zipCodeEt?.text?.length ?: 0
+        if (zipCodeLength < 5) {
+            showUserError("Invalid ZIP code.")
+            return false
+        }
+        return true
+    }
+
+    private fun checkDistance(): Boolean {
+        val distanceIntValue = distanceEt?.text?.toString()?.toInt() ?: 0
+        if (distanceIntValue <= 0) {
+            showUserError("Invalid distance.")
+            return false
+        }
+        return true
+    }
+
+    private fun showAPIError(errorCode: Int?) {
+        progressBar?.visibility = View.GONE
         errorTv?.text = if (404 == errorCode) "The ZIP code you provided was not found." else "Something went wrong. Please try again later."
         errorTv?.visibility = VISIBLE
         zipCodeListLabelTv?.visibility = GONE
         zipCodeListRecyclerView?.visibility = GONE
     }
 
+    private fun showUserError(errorMessage: String) {
+        progressBar?.visibility = View.GONE
+        errorTv?.text = errorMessage
+        errorTv?.visibility = VISIBLE
+        zipCodeListLabelTv?.visibility = GONE
+        zipCodeListRecyclerView?.visibility = GONE
+    }
+
     private fun hideError() {
+        progressBar?.visibility = View.GONE
         zipCodeListLabelTv?.visibility = VISIBLE
         zipCodeListRecyclerView?.visibility = VISIBLE
         errorTv?.visibility = GONE
@@ -130,12 +158,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun findZIPCodeInTheRadius() {
         progressBar?.visibility = View.VISIBLE
+        if (!checkZIPCode()) {
+            return
+        }
+        if (!checkDistance()) {
+            return
+        }
         ZIPCodeApiService.create().searchZIPCodeByRadius(apiKey, format, zipCodeEt?.text.toString(), distanceEt?.text.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { result ->
-                            progressBar?.visibility = View.GONE
                             hideError()
                             val data = result.zipCodes.apply {
                                 remove(zipCodeEt?.text?.toString())
@@ -144,8 +177,7 @@ class MainActivity : AppCompatActivity() {
                             Log.d(TAG, "ZIPCode API request successful! ZIP Codes : ${result.zipCodes}")
                         },
                         { error ->
-                            progressBar?.visibility = View.GONE
-                            showError((error as? HttpException)?.code())
+                            showAPIError((error as? HttpException)?.code())
                             Log.d(TAG, "ZIPCode API request error: ${error.message}")
                         },
                         {
