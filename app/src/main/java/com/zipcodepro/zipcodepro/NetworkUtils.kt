@@ -3,10 +3,9 @@ package com.zipcodepro.zipcodepro
 import android.content.Context
 import android.net.ConnectivityManager
 
-
-
 /**
  * Created by hunglac on 11/4/18.
+ * Network utils to handle network check
  */
 class NetworkUtils {
 

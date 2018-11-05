@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:inputType="number"
-                    android:maxLength="5"
+                    android:maxLength="@integer/inputMaxLength"
                     android:imeOptions="actionNext" />
 
             </LinearLayout>
@@ -95,7 +95,7 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:inputType="number"
-                    android:maxLength="5"
+                    android:maxLength="@integer/inputMaxLength"
                     android:imeOptions="actionSearch"
                     android:padding="10dp"/>
 
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:padding="20dp"
                 android:layout_marginEnd="40dp"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:text="@string/search_btn_label"/>
 
             <TextView
@@ -137,7 +137,7 @@
                 android:id="@+id/main_recyclerview"
                 android:scrollbars="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:padding="1dp"

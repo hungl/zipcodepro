@@ -13,7 +13,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        resValue "string", "zipcodeAPIKey", "gXTMe761UEknkYBpIgAKOX00rBZVwMLWF4YtS1sCoLjOlv85TmL1YBLKzSRqtuYj"
+
+        // Will be placed in build types or product flavors when we have different environment and product flavors
+        resValue "string", "zipcodeAPIKey", "kvvPWEc8xSIUkUm2VoX1PJUwBhBda2YOMMMThHYTWlJnG4XqehphZPbkILDowXqE"
     }
     buildTypes {
         release {

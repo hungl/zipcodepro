@@ -12,6 +12,7 @@ import retrofit2.http.QueryName
 
 /**
  * Created by hunglac on 11/2/18.
+ * ZIP Code API service
  */
 interface ZIPCodeApiService {
     @GET("/rest/{apiKey}/{format}/{zipCode}/{distance}/{distanceUnit}")
@@ -21,13 +22,18 @@ interface ZIPCodeApiService {
             @Path("zipCode") zipCode: String,
             @Path("distance") distance: String,
             @Path("distanceUnit") distanceUnit: String,
+            // Whether to get full address or only ZIP code in the response
+            // Empty string for full
+            // "minimal" for ZIP code only
             @QueryName() minimal: String
     ): Observable<ZIPCodeResponse>
 
     companion object {
         fun create(): ZIPCodeApiService {
 
+            // For debugging
             val interceptor = HttpLoggingInterceptor()
+            // Level of logging can be determined by build types
             interceptor.level = HttpLoggingInterceptor.Level.BODY
             val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
 

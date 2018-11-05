@@ -33,10 +33,13 @@ class MainActivity : AppCompatActivity() {
 
     private var zipCodeEt: EditText? = null
     private var distanceEt: EditText? = null
-    private var viewAdapter = ZIPCodeAdapter()
+    private var searchButton: Button? = null
     private var errorTv: TextView? = null
     private var zipCodeListLabelTv: TextView? = null
+
+    private var viewAdapter = ZIPCodeAdapter()
     private var zipCodeListRecyclerView: RecyclerView? = null
+
     private val format = Constants.RESPONSE_FORMAT_JSON
     private val distanceUnit = Constants.DISTANCE_UNIT_KM
     private val responseMinimal = Constants.RESPONSE_MININAL
@@ -47,20 +50,20 @@ class MainActivity : AppCompatActivity() {
 
         progressBar = findViewById(R.id.main_progressBar)
 
+        // Layout with network connection
         zipCodeMainLL = findViewById(R.id.main_linearlayout)
-        zipCodeNetworkErrorLL = findViewById(R.id.main_network_error_linearlayout)
 
+        // Layout with no network connection
+        zipCodeNetworkErrorLL = findViewById(R.id.main_network_error_linearlayout)
         reloadBtn = findViewById(R.id.main_reload_button)
         reloadBtn?.setOnClickListener {
             checkNetworkConnection()
         }
 
+        // Inputs, labels and button
         zipCodeEt = findViewById(R.id.main_zipcode_et)
-
         (findViewById<TextView?>(R.id.main_distance_unit_textview))?.text = distanceUnit
-
-        val searchButton = findViewById<Button?>(R.id.main_search_btn)
-
+        searchButton = findViewById<Button?>(R.id.main_search_btn)
         distanceEt = findViewById<EditText?>(R.id.main_distance_et)?.apply {
             setOnEditorActionListener { _, actionId, _ ->
                 return@setOnEditorActionListener when (actionId) {
@@ -74,15 +77,6 @@ class MainActivity : AppCompatActivity() {
         }
         errorTv = findViewById(R.id.main_error_tv)
         zipCodeListLabelTv = findViewById(R.id.main_list_label_tv)
-        val viewManager = LinearLayoutManager(this)
-
-        zipCodeListRecyclerView = findViewById<RecyclerView?>(R.id.main_recyclerview)?.apply {
-            setHasFixedSize(true)
-            layoutManager = viewManager
-            adapter = viewAdapter
-
-        }
-
         searchButton?.apply {
             isEnabled = !(zipCodeEt?.text.isNullOrEmpty() || distanceEt?.text.isNullOrEmpty())
             setOnClickListener {
@@ -93,14 +87,26 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Result list
+        val viewManager = LinearLayoutManager(this)
+        zipCodeListRecyclerView = findViewById<RecyclerView?>(R.id.main_recyclerview)?.apply {
+            setHasFixedSize(true)
+            layoutManager = viewManager
+            adapter = viewAdapter
+
+        }
+
+        // Adding text watcher for field validation
         zipCodeEt?.addTextChangedListener(ZIPCodeProTextWatcher(zipCodeEt, distanceEt, searchButton))
         distanceEt?.addTextChangedListener(ZIPCodeProTextWatcher(zipCodeEt, distanceEt, searchButton))
 
+        // Check network connection to update UI in first launch
         checkNetworkConnection()
     }
 
     override fun onResume() {
         super.onResume()
+        // Check network connection and update ui onResume
         checkNetworkConnection()
     }
 
@@ -114,6 +120,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Validating ZIP Code input
     private fun checkZIPCode(): Boolean {
         val zipCodeLength = zipCodeEt?.text?.length ?: 0
         if (zipCodeLength < 5) {
@@ -123,6 +130,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    // Validating ZIP distance input
     private fun checkDistance(): Boolean {
         val distanceIntValue = distanceEt?.text?.toString()?.toInt() ?: 0
         if (distanceIntValue <= 0) {
@@ -174,11 +182,12 @@ class MainActivity : AppCompatActivity() {
                 .subscribe(
                         { result ->
                             hideError()
+                            // Remove ZIP code that user had entered from result list
                             val data = result.zipCodes.apply {
                                 remove(zipCodeEt?.text?.toString())
                             }
                             viewAdapter.setData(data)
-                            Log.d(TAG, "ZIPCode API request successful! ZIP Codes : ${result.zipCodes}")
+                            Log.d(TAG, "ZIPCode API request successful! ZIP Codes : $data")
                         },
                         { error ->
                             showAPIError((error as? HttpException)?.code())
@@ -190,6 +199,7 @@ class MainActivity : AppCompatActivity() {
                 )
     }
 
+    // Custom text watcher for ZIP code and distance input validation
     private class ZIPCodeProTextWatcher(var zipcode: EditText?, var distance: EditText?, var searchButton: Button?): TextWatcher {
 
         override fun afterTextChanged(s: Editable?) {
@@ -199,10 +209,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            checkEmptyFields()
+            validateFields()
         }
 
-        private fun checkEmptyFields(){
+        private fun validateFields(){
             searchButton?.isEnabled = !(zipcode?.text.isNullOrEmpty() || distance?.text.isNullOrEmpty())
         }
     }
