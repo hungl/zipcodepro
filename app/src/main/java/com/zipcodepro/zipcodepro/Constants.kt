@@ -5,6 +5,8 @@ package com.zipcodepro.zipcodepro
  */
 class Constants {
     companion object {
-        const val MY_CONSTANT = "Constants"
+        const val RESPONSE_FORMAT_JSON = "radius.json"
+        const val DISTANCE_UNIT_KM = "km"
+        const val RESPONSE_MININAL = "minimal"
     }
 }

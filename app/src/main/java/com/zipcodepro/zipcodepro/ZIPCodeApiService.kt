@@ -8,17 +8,20 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.QueryName
 
 /**
  * Created by hunglac on 11/2/18.
  */
 interface ZIPCodeApiService {
-    @GET("/rest/{apiKey}/{format}/{zipCode}/{distance}/km?minimal")
+    @GET("/rest/{apiKey}/{format}/{zipCode}/{distance}/{distanceUnit}")
     fun searchZIPCodeByRadius(
             @Path("apiKey") apiKey: String,
             @Path("format") format: String,
             @Path("zipCode") zipCode: String,
-            @Path("distance") distance: String
+            @Path("distance") distance: String,
+            @Path("distanceUnit") distanceUnit: String,
+            @QueryName() minimal: String
     ): Observable<ZIPCodeResponse>
 
     companion object {

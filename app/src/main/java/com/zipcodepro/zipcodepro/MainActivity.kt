@@ -38,7 +38,9 @@ class MainActivity : AppCompatActivity() {
     private var zipCodeListLabelTv: TextView? = null
     private var zipCodeListRecyclerView: RecyclerView? = null
     private val apiKey = "gXTMe761UEknkYBpIgAKOX00rBZVwMLWF4YtS1sCoLjOlv85TmL1YBLKzSRqtuYj"
-    private val format = "radius.json"
+    private val format = Constants.RESPONSE_FORMAT_JSON
+    private val distanceUnit = Constants.DISTANCE_UNIT_KM
+    private val responseMinimal = Constants.RESPONSE_MININAL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -164,7 +166,7 @@ class MainActivity : AppCompatActivity() {
         if (!checkDistance()) {
             return
         }
-        ZIPCodeApiService.create().searchZIPCodeByRadius(apiKey, format, zipCodeEt?.text.toString(), distanceEt?.text.toString())
+        ZIPCodeApiService.create().searchZIPCodeByRadius(apiKey, format, zipCodeEt?.text.toString(), distanceEt?.text.toString(), distanceUnit, responseMinimal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
