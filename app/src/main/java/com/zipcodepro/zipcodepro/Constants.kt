@@ -8,5 +8,6 @@ class Constants {
         const val RESPONSE_FORMAT_JSON = "radius.json"
         const val DISTANCE_UNIT_KM = "km"
         const val RESPONSE_MININAL = "minimal"
+        const val ZIPCODE_API_BASE_URL = "https://www.zipcodeapi.com"
     }
 }

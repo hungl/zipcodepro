@@ -36,7 +36,7 @@ interface ZIPCodeApiService {
                     .addConverterFactory(
                             GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .baseUrl("https://www.zipcodeapi.com")
+                    .baseUrl(Constants.ZIPCODE_API_BASE_URL)
                     .build()
 
             return retrofit.create(ZIPCodeApiService::class.java)
