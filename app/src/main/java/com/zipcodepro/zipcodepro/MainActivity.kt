@@ -124,14 +124,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun findZIPCodeInTheRadius() {
-        ZIPCodeApiService.create()
-                .searchZIPCodeByRadius(apiKey, format, zipCodeEt?.text.toString(), distanceEt?.text.toString())
+        ZIPCodeApiService.create().searchZIPCodeByRadius(apiKey, format, zipCodeEt?.text.toString(), distanceEt?.text.toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         { result ->
                             hideError()
-                            viewAdapter.setData(result.zipCodes)
+                            val data = result.zipCodes.apply {
+                                remove(zipCodeEt?.text?.toString())
+                            }
+                            viewAdapter.setData(data)
                             Log.d(TAG, "ZIPCode API request successful! ZIP Codes : ${result.zipCodes}")
                         },
                         { error ->
