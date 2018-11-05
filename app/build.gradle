@@ -15,7 +15,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         // Will be placed in build types or product flavors when we have different environment and product flavors
-        resValue "string", "zipcodeAPIKey", "kvvPWEc8xSIUkUm2VoX1PJUwBhBda2YOMMMThHYTWlJnG4XqehphZPbkILDowXqE"
+        resValue "string", "zipcodeAPIKey", "AqIdnUO1niI0ERHLQbSaOeSUedlILXR2dr5Rhf2beSq7xp9JEp48zKI2A4O1O6gu"
     }
     buildTypes {
         release {
