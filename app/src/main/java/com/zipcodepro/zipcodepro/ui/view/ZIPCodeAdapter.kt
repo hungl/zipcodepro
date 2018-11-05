@@ -1,10 +1,11 @@
-package com.zipcodepro.zipcodepro
+package com.zipcodepro.zipcodepro.ui.view
 
 import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import com.zipcodepro.zipcodepro.R
 
 /**
  * Created by hunglac on 11/2/18.
@@ -18,7 +19,7 @@ class ZIPCodeAdapter :
     class ZIPCodeViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
 
         override fun onCreateViewHolder(parent: ViewGroup,
-                                        viewType: Int): ZIPCodeAdapter.ZIPCodeViewHolder {
+                                        viewType: Int): ZIPCodeViewHolder {
             val textView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.zipcode_textview, parent, false) as TextView
             return ZIPCodeViewHolder(textView)

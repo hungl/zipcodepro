@@ -1,4 +1,4 @@
-package com.zipcodepro.zipcodepro
+package com.zipcodepro.zipcodepro.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

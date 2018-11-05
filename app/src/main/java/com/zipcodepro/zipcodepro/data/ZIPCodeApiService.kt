@@ -1,5 +1,6 @@
-package com.zipcodepro.zipcodepro
+package com.zipcodepro.zipcodepro.data
 
+import com.zipcodepro.zipcodepro.utils.Constants
 import io.reactivex.Observable
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

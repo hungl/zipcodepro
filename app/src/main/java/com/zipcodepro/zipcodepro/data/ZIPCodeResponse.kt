@@ -1,4 +1,4 @@
-package com.zipcodepro.zipcodepro
+package com.zipcodepro.zipcodepro.data
 
 import com.google.gson.annotations.SerializedName
 

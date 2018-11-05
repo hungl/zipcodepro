@@ -1,4 +1,4 @@
-package com.zipcodepro.zipcodepro
+package com.zipcodepro.zipcodepro.utils
 
 /**
  * Created by hunglac on 11/4/18.

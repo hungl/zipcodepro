@@ -1,4 +1,4 @@
-package com.zipcodepro.zipcodepro
+package com.zipcodepro.zipcodepro.ui.activity
 
 import android.content.Context
 import android.os.Bundle
@@ -18,6 +18,11 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.zipcodepro.zipcodepro.R
+import com.zipcodepro.zipcodepro.ui.view.ZIPCodeAdapter
+import com.zipcodepro.zipcodepro.data.ZIPCodeApiService
+import com.zipcodepro.zipcodepro.utils.Constants
+import com.zipcodepro.zipcodepro.utils.NetworkUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
